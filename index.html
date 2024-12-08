@@ -173,33 +173,47 @@
     <!-- Sound Effect -->
     <audio id="yaySound" src="short-crowd-cheer-6713.mp3"></audio>
     <script>
-      let completedSections = 0;
+      // Load the saved progress from localStorage or set to 0 if not available
+      let completedSections =
+        parseInt(localStorage.getItem("completedSections")) || 0;
       const totalSections = 5;
       const yaySound = document.getElementById("yaySound");
       const progressRing = document.getElementById("progressRing");
       const progressText = document.getElementById("progressText");
       const undoButton = document.getElementById("undoButton");
 
+      // Function to update progress and save to localStorage
       function updateProgress() {
         if (completedSections < totalSections) {
           completedSections++;
+          saveProgress();
           updateDisplay();
         }
       }
 
+      // Function to undo progress and save to localStorage
       function undoProgress() {
         if (completedSections > 0) {
           completedSections--;
+          saveProgress();
           updateDisplay();
         }
       }
 
+      // Function to reset progress and remove saved state from localStorage
       function resetProgress() {
         completedSections = 0;
+        localStorage.removeItem("completedSections");
         progressRing.classList.remove("complete");
         updateDisplay();
       }
 
+      // Function to save the current progress to localStorage
+      function saveProgress() {
+        localStorage.setItem("completedSections", completedSections);
+      }
+
+      // Function to update the display based on the current progress
       function updateDisplay() {
         const percentage = Math.round(
           (completedSections / totalSections) * 100
@@ -222,6 +236,7 @@
         }
       }
 
+      // Function to launch confetti animation
       function launchConfetti() {
         confetti({
           particleCount: 100,
@@ -229,6 +244,9 @@
           origin: { y: 0.6 },
         });
       }
+
+      // Initial display update on page load to reflect saved progress
+      updateDisplay();
     </script>
   </body>
 </html>
