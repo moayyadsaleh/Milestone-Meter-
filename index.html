@@ -187,17 +187,39 @@ body {
     <audio id="yaySound" src="short-crowd-cheer-6713.mp3"></audio>
 
     <script>
-      let completedSections =
-        parseInt(localStorage.getItem("completedSections")) || 0;
-      const totalSections = 3;
+      let completedSections = 0;
+      const totalSections = 5;
       const yaySound = document.getElementById("yaySound");
       const progressRing = document.getElementById("progressRing");
       const progressText = document.getElementById("progressText");
-      const completionBadge = document.getElementById("completionBadge");
+      const undoButton = document.getElementById("undoButton");
 
-      // Initial display update on page load
-      updateDisplay();
+      function updateProgress() {
+        if (completedSections < totalSections) {
+          completedSections++;
+          updateDisplay();
+        }
+      }
 
+      function undoProgress() {
+        if (completedSections > 0) {
+          completedSections--;
+          updateDisplay();
+        }
+      }
+
+      function resetProgress() {
+        completedSections = 0;
+        progressRing.classList.remove("complete");
+        updateDisplay();
+      }
+
+      // Function to save the current progress to localStorage
+      function saveProgress() {
+        localStorage.setItem("completedSections", completedSections);
+      }
+
+      // Function to update the display based on the current progress
       function updateDisplay() {
         const percentage = Math.round(
           (completedSections / totalSections) * 100
@@ -236,6 +258,7 @@ body {
         }
       });
 
+      // Function to launch confetti animation
       function launchConfetti() {
         confetti({
           particleCount: 200,
@@ -245,6 +268,9 @@ body {
           shapes: ["circle", "square"],
         });
       }
+
+      // Initial display update on page load to reflect saved progress
+      updateDisplay();
     </script>
   </body>
 </html>
